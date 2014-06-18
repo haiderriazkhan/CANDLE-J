@@ -7,5 +7,5 @@ Haider Riaz
 haider.riaz@mail.mcgill.ca  
 Montreal Neurological Institute  
 McGill University  
-3801, rue University, MP121 (lab)  
+3801, Rue University, MP121 (lab)  
 Montreal, QC H3A 2B4
