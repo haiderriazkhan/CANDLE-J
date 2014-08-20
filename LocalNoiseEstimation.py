@@ -8,7 +8,7 @@ import array
 from array import zeros
 import math 
 
-def main(ima,x,y,z):
+def estimate(ima,x,y,z):
     
     minimum = reduce(min, ima)
     
