@@ -133,7 +133,7 @@ print InputImgArray[3]
 
 # Estimation of local noise variance
 
-LocalNoiseEstimation.main(medfiltArray, x, y, z)
+LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
 
 
 
