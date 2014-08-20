@@ -7,17 +7,17 @@ Created on Jun 27, 2014
 
 from ij import IJ, ImageStack, ImagePlus 
 from ij.plugin import Filters3D, Duplicator
-#from ij.process import Filters
 from ij.process import StackStatistics, FloatProcessor, ImageProcessor
+import array
 from array import zeros 
 import time
-import java.lang.Math as javaMath
-from net.imglib2.img import ImagePlusAdapter
-from net.imglib2.algorithm.fft2 import FFTConvolution
+import math
 from ij.gui import GenericDialog
+import LocalNoiseEstimation
 #from ij.io import FileSaver   
 
- 
+
+
 
 # function that opens up a dialog box where the user inputs filter parameters 
 def getOptions():  
@@ -42,10 +42,14 @@ def getOptions():
     background = gd.getNextBoolean()   
     return name, beta, patchradius, searchradius, background  
   
- 
+
 
 # get input image 
 InputImg = IJ.openImage();
+
+
+
+
 
 # Get Input Image Statistics  
 InStats = StackStatistics(InputImg)
@@ -60,22 +64,9 @@ if options is not None:
  
 # get the image stack within the ImagePlus 
 InputStack = InputImg.getStack()
-dim = InputImg.getNSlices() 
-print "number of slices:", dim
+z = InputImg.getNSlices() 
+print "number of slices:", z
 
-# Begin Quarantined Code Block
-
-fact = 64-searchradius
-substack = javaMath.ceil(dim/fact)
-
-if substack == 2:
-    fact=fact*2
-    substack=1
-    
-if substack == 1:
-    fact=dim
-     
-# End Quarantined Code Block
     
 
 # Instantiate 3D Median Filter plugin  
@@ -90,85 +81,64 @@ medianFilteredStack = f3d.filter(InputStack, f3d.MEDIAN, 2, 2, 2)
 
 
 
-# Construct an ImagePlus from the stack 
+# Construct an ImagePlus from the filtered stack 
 medianFilteredImage = ImagePlus("MedianFiltered-Image", medianFilteredStack)
 
 # End of 3D Median Filter
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
+# get image dimensions
+x = medianFilteredImage.width
+y = medianFilteredImage.height
+
+
+
 # Get Image Statistics after Median 3D Filter
 medianFilterStats = StackStatistics(medianFilteredImage)
 print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max
 
-if background:
-    newStats = StackStatistics(medianFilteredImage)
-    mini = newStats.min
-    average_val =  newStats.mean
-    maxi = newStats.max
-    delta = (maxi-mini)/10000
-    k=3
-    N = javaMath.pow(k, 3)
-    ConvMed = Duplicator().run(medianFilteredImage)
-    ConvMedWrap = ImagePlusAdapter.wrap(ConvMed)
-    
-    
-    
-    ones = FloatProcessor(3 , 3)
-    ones.setValue(1)
-    ones.fill()
-    onesStack = ImageStack(3, 3)
-    for i in xrange(1, 4): 
-        onesStack.addSlice(ones)
-    onesImage = ImagePlus("onesImage", onesStack)
-    onesImageWrap = ImagePlusAdapter.wrap(onesImage)
-    
-    
-    
-    #FFTConvolution(ConvMedWrap , onesImageWrap).run()
-    Stats = StackStatistics(ConvMed)
-    print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
-    
-    
-      
-else:
-    fp = FloatProcessor(medianFilteredImage.width , medianFilteredImage.height)
-    fp.setValue(1)
-    fp.fill()
-    maskStack = ImageStack(medianFilteredImage.width, medianFilteredImage.height)   
-    for i in xrange(1, dim+1): 
-        maskStack.addSlice(fp)
-    mask =  ImagePlus("mask", maskStack)
-    
 
+# Get the Input and filtered Images as 1D arrays
+medfiltArray = array.array('f')
+InputImgArray = array.array('f')
 
-# Anscombe transform to convert Poisson noise into Gaussian noise
-medFiltStack = medianFilteredImage.getStack()   
-newMedFiltStack = ImageStack(medianFilteredImage.width, medianFilteredImage.height)
-newInputStack = ImageStack(InputImg.width, InputImg.height)
-for i in xrange(1 , medianFilteredImage.getNSlices() + 1):
-    ip = medFiltStack.getProcessor(i).convertToFloat()
+for i in xrange(1 , z + 1):
+    ip = medianFilteredStack.getProcessor(i).convertToFloat()
     ip2 = InputStack.getProcessor(i).convertToFloat()
     pixels = ip.getPixels()
     pixels2 = ip2.getPixels()
-    for j in xrange (len(pixels)):
-        pixels[j] = 2 * javaMath.sqrt(pixels[j] + (3.0/8.0)  )
-        pixels2[j] = 2 * javaMath.sqrt(pixels2[j] + (3.0/8.0)  )
-           
-    newMedFiltStack.addSlice(ip)
-    newInputStack.addSlice(ip2)    
+    medfiltArray.extend(pixels)
+    InputImgArray.extend(pixels2)
 
-medianFilteredImage = ImagePlus("MedianFiltered-Image", newMedFiltStack)
-InputImg = ImagePlus("Input-Image", newInputStack)
-    
-#newStats = StackStatistics(medianFilteredImage)
-#print "mean:", newStats.mean, "minimum:", newStats.min, "maximum:", newStats.max
-#print medianFilteredImage.getNSlices() 
-# Display result of 3D median filter 
+print  InputImgArray[3]
+
+
+# Anscombe transform to convert Poisson noise into Gaussian noise
+
+start_time = time.time()
+print "Stabilization: Anscombe transform"
+
+for i in xrange (x*y*z):
+    medfiltArray[i] = 2 * math.sqrt(medfiltArray[i] + (3.0/8.0)  )
+    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + (3.0/8.0)  )
+
+
+# End of Anscombe transform
+elapsed_time = time.time() - start_time
+print "Elapsed time:", elapsed_time
+
+print InputImgArray[3]       
+
+
+# Estimation of local noise variance
+
+LocalNoiseEstimation.main(medfiltArray, x, y, z)
+
+
+
 medianFilteredImage.show()
-#medianFilterStats = StackStatistics(medianFilteredImage)
-#print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max 
-#print "number of output slices:", medianFilteredImage.getNSlices()
+
 
  
 #fs =  FileSaver(newImage)
@@ -178,4 +148,5 @@ medianFilteredImage.show()
 # Temporary Reusable code
 #Stats = StackStatistics()
 #print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
-
+#medfiltArray = map(lambda x: 2 * javaMath.sqrt(x + (3.0/8.0)  ) ,  medfiltArray)    
+#InputImgArray = map(lambda x: 2 * javaMath.sqrt(x + (3.0/8.0)  ) ,  InputImgArray)
