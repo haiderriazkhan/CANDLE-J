@@ -111,7 +111,7 @@ for i in xrange(1 , z + 1):
     medfiltArray.extend(pixels)
     InputImgArray.extend(pixels2)
 
-print  InputImgArray[3]
+
 
 
 # Anscombe transform to convert Poisson noise into Gaussian noise
@@ -128,7 +128,7 @@ for i in xrange (x*y*z):
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
-print InputImgArray[3]       
+       
 
 
 # Estimation of local noise variance
