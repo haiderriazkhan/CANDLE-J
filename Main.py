@@ -15,7 +15,7 @@ import math
 from ij.gui import GenericDialog
 import LocalNoiseEstimation
 #from ij.io import FileSaver   
-
+#from mikera.vectorz import *
 
 
 
@@ -102,6 +102,7 @@ print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maxim
 # Get the Input and filtered Images as 1D arrays
 medfiltArray = array.array('f')
 InputImgArray = array.array('f')
+List1 = []
 
 for i in xrange(1 , z + 1):
     ip = medianFilteredStack.getProcessor(i).convertToFloat()
@@ -111,7 +112,8 @@ for i in xrange(1 , z + 1):
     medfiltArray.extend(pixels)
     InputImgArray.extend(pixels2)
 
-
+# Background Detection
+mask = [1]*(x*y*z)
 
 
 # Anscombe transform to convert Poisson noise into Gaussian noise
@@ -119,21 +121,21 @@ for i in xrange(1 , z + 1):
 start_time = time.time()
 print "Stabilization: Anscombe transform"
 
+'''
 for i in xrange (x*y*z):
     medfiltArray[i] = 2 * math.sqrt(medfiltArray[i] + (3.0/8.0)  )
-    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + (3.0/8.0)  )
+    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + (3.0/8.0)  )'''
 
 
 # End of Anscombe transform
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
-       
 
 
 # Estimation of local noise variance
 
-LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
+#LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
 
 
 
