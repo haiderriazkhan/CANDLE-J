@@ -121,11 +121,13 @@ mask = [1]*(x*y*z)
 start_time = time.time()
 print "Stabilization: Anscombe transform"
 
+const = (3.0/8.0)
+
 '''
 for i in xrange (x*y*z):
-    medfiltArray[i] = 2 * math.sqrt(medfiltArray[i] + (3.0/8.0)  )
-    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + (3.0/8.0)  )'''
-
+    medfiltArray[i] = 2 * math.sqrt(medfiltArray[i] + const  )
+    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + const  )'''
+           
 
 # End of Anscombe transform
 elapsed_time = time.time() - start_time
@@ -135,8 +137,7 @@ print "Elapsed time:", elapsed_time
 
 # Estimation of local noise variance
 
-#LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
-
+LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
 
 
 medianFilteredImage.show()
@@ -150,5 +151,5 @@ medianFilteredImage.show()
 # Temporary Reusable code
 #Stats = StackStatistics()
 #print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
-#medfiltArray = map(lambda x: 2 * javaMath.sqrt(x + (3.0/8.0)  ) ,  medfiltArray)    
-#InputImgArray = map(lambda x: 2 * javaMath.sqrt(x + (3.0/8.0)  ) ,  InputImgArray)
+#medfiltArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  medfiltArray)    
+#InputImgArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  InputImgArray)
