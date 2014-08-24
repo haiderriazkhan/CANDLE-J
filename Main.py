@@ -9,13 +9,14 @@ from ij import IJ, ImageStack, ImagePlus
 from ij.plugin import Filters3D, Duplicator
 from ij.process import StackStatistics, FloatProcessor, ImageProcessor
 import array
-from array import zeros 
+from array import zeros
+import jarray 
 import time
 import math
 from ij.gui import GenericDialog
 import LocalNoiseEstimation
 #from ij.io import FileSaver   
-#from mikera.vectorz import *
+from mikera.vectorz import *
 
 
 
@@ -102,7 +103,7 @@ print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maxim
 # Get the Input and filtered Images as 1D arrays
 medfiltArray = array.array('f')
 InputImgArray = array.array('f')
-List1 = []
+
 
 for i in xrange(1 , z + 1):
     ip = medianFilteredStack.getProcessor(i).convertToFloat()
@@ -111,6 +112,9 @@ for i in xrange(1 , z + 1):
     pixels2 = ip2.getPixels()
     medfiltArray.extend(pixels)
     InputImgArray.extend(pixels2)
+    
+    
+
 
 # Background Detection
 mask = [1]*(x*y*z)
@@ -137,8 +141,17 @@ print "Elapsed time:", elapsed_time
 
 # Estimation of local noise variance
 
-LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
+#LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
 
+x = [1, 2, 3, 4 , 5 , 6, 7 , 8, 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16, 17 , 18]
+size = [0]*3
+size[0] = 3
+size[1] = 3
+size[2] = 2
+m = 3
+d = 3
+out = LocalNoiseEstimation.cshift3D(x, m, d, size)
+print out
 
 medianFilteredImage.show()
 

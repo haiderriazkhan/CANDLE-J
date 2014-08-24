@@ -51,33 +51,36 @@ def cshift3D(x, m, d, size):
     N2 = size[1]
     N3 = size[2]
     if d == 1:
-        n = xrange(0,N1-1) #(1)
+        n = xrange(N1) #(1)
         n = [(val - m) % N1 for val in n] #(2)
         out = array.array('f')
         for zloc in xrange(N3):
-            for yloc in xrange(N2):
-                out.extend(x[zloc*N1*N2 + n*N2 + yloc])
+            for xloc in n:
+                for yloc in xrange(N2):
+                    out.append(x[int(zloc*N1*N2 + xloc*N2 + yloc)])
     
     elif d == 2:
-        n = xrange(0,N2-1) #(1)
+        n = xrange(N2) #(1)
         n = [(val - m) % N2 for val in n] #(2)
         out = array.array('f')
         for zloc in xrange(N3):
             for xloc in xrange(N1):
-                out.extend(x[zloc*N1*N2 + xloc*N2 + n])
+                for yloc in n:
+                    out.append(x[int(zloc*N1*N2 + xloc*N2 + yloc)])
     
     elif d == 3:
-        n = xrange(0,N3-1) #(1)
+        n = xrange(N3) #(1)
         n = [(val - m) % N3 for val in n] #(2)
         out = array.array('f')
-        for xloc in xrange(N1):
-            for yloc in xrange(N2):
-                out.extend(x[n*N1*N2 + xloc*N2 + yloc]) 
+        for zloc in n:
+            for xloc in xrange(N1):
+                for yloc in xrange(N2):
+                    out.append(x[zloc*N1*N2 + xloc*N2 + yloc]) 
     
     return out 
 
 
-# Function cshift3D
+# Function permute
 def permute(A,order):
     print "To Do"
     
@@ -87,7 +90,7 @@ def upfirdn(xin,h,p,q):
     print "To Do"    
 
 
-# Function 
+# Function ipermute
 def ipermute(B, order):
     print "To Do"
 
