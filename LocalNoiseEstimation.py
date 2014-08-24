@@ -75,7 +75,7 @@ def cshift3D(x, m, d, size):
         for zloc in n:
             for xloc in xrange(N1):
                 for yloc in xrange(N2):
-                    out.append(x[zloc*N1*N2 + xloc*N2 + yloc]) 
+                    out.append(x[int(zloc*N1*N2 + xloc*N2 + yloc)]) 
     
     return out 
 
@@ -241,12 +241,12 @@ def estimate(ima,x,y,z):
     else:
         p = int(p1*p2*p3)
         pad1 = zeros('f' , p) #(1)
-        for zloc in xrange(p3): # slices
-            for xloc in xrange(p2): # rows
-                for yloc in xrange(p1): #columns
-                    if xloc < x and yloc < y and zloc < z:
-                        pad1[int(zloc*p1*p2 + xloc*p2 + yloc)] = ima[int(zloc*x*y + xloc*y + yloc)]
+        for zloc in xrange(z): # slices
+            for xloc in xrange(x): # rows
+                for yloc in xrange(y): #columns
+                    pad1[int(zloc*p1*p2 + xloc*p2 + yloc)] = ima[int(zloc*x*y + xloc*y + yloc)]
     
+               
     
     af = farras()
     
