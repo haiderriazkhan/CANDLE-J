@@ -249,4 +249,3 @@ def estimate(ima,x,y,z):
                
     
     af = farras()
-    
