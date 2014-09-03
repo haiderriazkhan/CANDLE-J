@@ -116,19 +116,17 @@ def afb3D_A(x, af, d):
     lo = zeros('f', (L+N1/2)*N2*N3)
     hi = zeros('f', (L+N1/2)*N2*N3)
     
-    
     for k in xrange(N3):
         xTemp = array.array('f')
         for xloc in xrange(N1):
             for yloc in xrange(N2):
-                xTemp.extend(x[k*N1*N2 + xloc*N2 + yloc])
+                xTemp.extend(x[k*N1*N2 + xloc*N2 + yloc]) # Corresponds to the kth slice
         
         
-    loTemp = upfirdn(xTemp, lpf, 1, 2)
-    for xloc in xrange(N1):
-        for yloc in xrange(N2):
-            lo[k*N1*N2 + xloc*N2 + yloc] = xTemp[xloc*N2 + yloc]
-    
+        loTemp = upfirdn(xTemp, lpf, 1, 2)    
+        for xloc in xrange(N1):
+            for yloc in xrange(N2):
+                lo[k*N1*N2 + xloc*N2 + yloc] = loTemp[xloc*N2 + yloc]
     
     loTemp = lo
     for zloc in xrange(N3):
@@ -136,41 +134,42 @@ def afb3D_A(x, af, d):
             for yloc in xrange(N2):
                 loTemp[zloc*N1*N2 + xloc*N2 + yloc] += lo[zloc*N1*N2 + (xloc + (N1/2))*N2 + yloc]
     
+                
     
-    
-    lo = zeros('f', (L+N1/2)*N2*N3)
+    lo = zeros('f', (N1/2)*N2*N3)
     for zloc in xrange(N3):
         for xloc in xrange(N1/2):
             for yloc in xrange(N2):
                 lo[zloc*N1*N2 + xloc*N2 + yloc] = loTemp[zloc*N1*N2 + xloc*N2 + yloc]
     
-    
+
     for k in xrange(N3):
         xTemp = array.array('f')
         for xloc in xrange(N1):
             for yloc in xrange(N2):
                 xTemp.extend(x[k*N1*N2 + xloc*N2 + yloc])
         
-        
-    hiTemp = upfirdn(xTemp, hpf, 1, 2)
-    for xloc in xrange(N1):
-        for yloc in xrange(N2):
-            hi[k*N1*N2 + xloc*N2 + yloc] = xTemp[xloc*N2 + yloc]
     
-  
+        hiTemp = upfirdn(xTemp, hpf, 1, 2)    
+        for xloc in xrange(N1):
+            for yloc in xrange(N2):
+                hi[k*N1*N2 + xloc*N2 + yloc] = hiTemp[xloc*N2 + yloc]
+                
+    
     hiTemp = hi
     for zloc in xrange(N3):
         for xloc in xrange(L):
             for yloc in xrange(N2):
                 hiTemp[zloc*N1*N2 + xloc*N2 + yloc] += hi[zloc*N1*N2 + (xloc + (N1/2))*N2 + yloc]
     
-    
-    
-    hi = zeros('f', (L+N1/2)*N2*N3)
+
+
+    hi = zeros('f', (N1/2)*N2*N3)
     for zloc in xrange(N3):
         for xloc in xrange(N1/2):
             for yloc in xrange(N2):
                 hi[zloc*N1*N2 + xloc*N2 + yloc] = hiTemp[zloc*N1*N2 + xloc*N2 + yloc]
+ 
     
     
     lo = ipermute(lo, p)
