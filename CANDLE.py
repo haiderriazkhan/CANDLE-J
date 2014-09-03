@@ -101,7 +101,44 @@ y = medianFilteredImage.height
 medianFilterStats = StackStatistics(medianFilteredImage)
 print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max
 
+    
+    
 
+# Background Detection
+mask = [1]*(x*y*z)
+
+
+# Anscombe transform to convert Poisson noise into Gaussian noise
+
+start_time = time.time()
+print "Stabilization: Anscombe transform"
+
+    
+IJ.run(medianFilteredImage, "32-bit", ""); 
+IJ.run(medianFilteredImage, "Add...", "value=0.375 stack"); 
+IJ.run(medianFilteredImage, "Square Root", "stack"); 
+IJ.run(medianFilteredImage, "Multiply...", "value=2 stack");
+
+IJ.run(InputImg, "32-bit", ""); 
+IJ.run(InputImg, "Add...", "value=0.375 stack"); 
+IJ.run(InputImg, "Square Root", "stack"); 
+IJ.run(InputImg, "Multiply...", "value=2 stack");       
+
+              
+
+# End of Anscombe transform
+elapsed_time = time.time() - start_time
+print "Elapsed time:", elapsed_time
+
+
+Stats = StackStatistics(medianFilteredImage)
+print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
+
+
+
+
+medianFilteredStack = medianFilteredImage.getStack()
+InputStack = InputImg.getStack()
 
 
 # Get the Input and filtered Images as 1D arrays
@@ -116,35 +153,6 @@ for i in xrange(1 , z + 1):
     pixels2 = ip2.getPixels()
     medfiltArray.extend(pixels)
     InputImgArray.extend(pixels2)
-    
-    
-
-
-# Background Detection
-mask = [1]*(x*y*z)
-
-
-# Anscombe transform to convert Poisson noise into Gaussian noise
-
-start_time = time.time()
-print "Stabilization: Anscombe transform"
-
-const = (3.0/8.0)
-
-'''
-for i in xrange (x*y*z):
-    medfiltArray[i] = 2 * math.sqrt(medfiltArray[i] + const  )
-    InputImgArray[i] = 2 * math.sqrt(InputImgArray[i] + const  )'''
-   
-#IJ.run( medianFilteredImage, "Add...", "value=0.4")
-#IJ.run( medianFilteredImage, "Square Root", "")
-#IJ.run( medianFilteredImage, "Multiply...", "value=2")    
-    
-          
-
-# End of Anscombe transform
-elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
 
 
 
@@ -164,7 +172,7 @@ medianFilteredImage.show()
 
 
 # Temporary Reusable code
-Stats = StackStatistics(medianFilteredImage)
-print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
+#Stats = StackStatistics()
+#print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
 #medfiltArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  medfiltArray)    
 #InputImgArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  InputImgArray)
