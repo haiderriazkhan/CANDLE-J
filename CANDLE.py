@@ -16,7 +16,7 @@ import jarray
 import time
 import math
 from ij.gui import GenericDialog
-import LocalNoiseEstimation
+#import LocalNoiseEstimation
 #from ij.io import FileSaver   
 from mikera.vectorz import *
 
