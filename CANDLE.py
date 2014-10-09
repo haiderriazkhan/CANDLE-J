@@ -16,9 +16,10 @@ import jarray
 import time
 import math
 from ij.gui import GenericDialog
-#import LocalNoiseEstimation
+import LocalNoiseEstimation
+import InverseAnscombe
 #from ij.io import FileSaver   
-from mikera.vectorz import *
+#from mikera.vectorz import *
 
 
 
@@ -166,6 +167,12 @@ for i in xrange(1 , z + 1):
 medianFilteredImage.show()
 
 
+bob = [4 , 5, 0 , -1 , -6 , 0 , 7 , 200 , 300  , 40]
+asympmap = [i for i, e in enumerate(bob) if e > 100]
+print asympmap
+lol =  2.0* math.sqrt(3.0/8.0)
+biasedmap = [i for i, e in enumerate(bob) if e < lol] 
+print biasedmap
  
 #fs =  FileSaver(newImage)
 #fs.save() 
