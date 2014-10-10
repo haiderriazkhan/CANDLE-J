@@ -168,11 +168,19 @@ medianFilteredImage.show()
 
 
 bob = [4 , 5, 0 , -1 , -6 , 0 , 7 , 200 , 300  , 40]
+cock = [45 , 55, 0 , -14 , -64 , 0 , 74 , 29 , 330  , 470]
 asympmap = [i for i, e in enumerate(bob) if e > 100]
-print asympmap
+
+print bob
+
 lol =  2.0* math.sqrt(3.0/8.0)
 biasedmap = [i for i, e in enumerate(bob) if e < lol] 
+
 print biasedmap
+
+
+
+
  
 #fs =  FileSaver(newImage)
 #fs.save() 

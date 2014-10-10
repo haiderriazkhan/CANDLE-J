@@ -38,9 +38,11 @@ def InvAnscombe(fimg):
     
     
     # Filling of areas under and above validity range
-    
-    
-    
+    for idx in asympmap:
+        optimalinvfimg[idx] = asympinvfimg[idx]
+        
+    for idx in biasedmap:
+        optimalinvfimg[idx] = 0
     
     
     
