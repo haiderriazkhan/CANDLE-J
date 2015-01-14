@@ -18,6 +18,10 @@ import math
 from ij.gui import GenericDialog
 import LocalNoiseEstimation
 import InverseAnscombe
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import JNApackage
+
 #from ij.io import FileSaver   
 #from mikera.vectorz import *
 
@@ -45,12 +49,11 @@ def getOptions():
     searchradius = gd.getNextNumber()  
     background = gd.getNextBoolean()   
     return name, beta, patchradius, searchradius, background  
-  
+ 
 
 
 # get input image 
 InputImg = IJ.openImage();
-
 
 
 
@@ -155,28 +158,32 @@ for i in xrange(1 , z + 1):
     medfiltArray.extend(pixels)
     InputImgArray.extend(pixels2)
 
-
-
-# Estimation of local noise variance
-
-#LocalNoiseEstimation.estimate(medfiltArray, x, y, z)
+MAP = zeros('f', 1000)
 
 
 
+print int(searchradius)
 
-medianFilteredImage.show()
+# Denoising
+print "Denoising: 3D Optimized Non-local Means Filter"
+fimg = JNApackage.ONLMTest.ONLMInputs(InputImgArray, int(searchradius), int(patchradius), MAP, beta, medfiltArray, mask, int(x), int(y), int(z))
+
+
+
+
+print fimg
 
 
 bob = [4 , 5, 0 , -1 , -6 , 0 , 7 , 200 , 300  , 40]
 cock = [45 , 55, 0 , -14 , -64 , 0 , 74 , 29 , 330  , 470]
 asympmap = [i for i, e in enumerate(bob) if e > 100]
 
-print bob
+#print bob
 
 lol =  2.0* math.sqrt(3.0/8.0)
 biasedmap = [i for i, e in enumerate(bob) if e < lol] 
 
-print biasedmap
+#print biasedmap
 
 
 
