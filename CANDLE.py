@@ -182,7 +182,7 @@ start_time = time.time()
 print "Inverse Anscombe"
 fimg = InverseAnscombe.InvAnscombe(fimg)
 print "Elapsed time:", elapsed_time
-print 'mean:', sum(fimg)/len(fimg) , 'min:' , min(fimg) , 'max:', max(fimg)
+
 
 
 outputstack = ImageStack(x, y, z )  
