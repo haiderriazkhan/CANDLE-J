@@ -1,54 +1,52 @@
 '''
-Created on Jun 27, 2014
+*************************************************************************
+ Haider Khan - haiderriazkhan@hotmail.com                               *
+ Ruthazer Lab, Montreal Neurological Institute.                         *
+ McGill University                                                      *                                      
+                                                                        *
+ Copyright (C) 2015 Haider Riaz Khan                                    *
+                                                                        *
+*************************************************************************
+ The CANDLE algorithm is described in:                                  *
+                                                                        *  
+ P. Coupe, Martin Munz, Jose V.Manjon, Edward Ruthazer, D.Louis Collins.*
+ A CANDLE for a deeper in-vivo insight. Medical Image Analysis,         *
+ 16(4):849-64 (2012).                                                   *
+*************************************************************************
 
-@author: haiderriaz
 '''
 
 
 from ij import IJ, ImageStack, ImagePlus 
-from ij.plugin import Filters3D, Duplicator
-from ij.plugin.filter import ImageMath
-from ij.process import StackStatistics, FloatProcessor, ImageProcessor
-from ij.process import *
-import array
-from array import zeros
-import jarray 
+from ij.plugin import Filters3D
+from ij.process import StackStatistics
+import array 
 import time
-import math
 from ij.gui import GenericDialog
-import LocalNoiseEstimation
-import InverseAnscombe
-import com.sun.jna.Library;
-import com.sun.jna.Native;
 import JNApackage
+from ij.io import FileSaver
+import sys
 
-#from ij.io import FileSaver   
-#from mikera.vectorz import *
 
 
 
 # function that opens up a dialog box where the user inputs filter parameters 
 def getOptions():  
     gd = GenericDialog("Options") 
-    gd.addStringField("Suffix for the filenames of the filtered images:", "Untitled")
     gd.addMessage("Filter Parameters")  
     gd.addNumericField("Smoothing Parameter", 0.1, 2)  # show 2 decimals
     gd.addNumericField("Patch radius", 2 , 1)
-    gd.addNumericField("Search volume radius", 3 , 1)
-    gd.addMessage("Background")  
-    gd.addCheckbox("Fast processing of the dark background", True)  
+    gd.addNumericField("Search volume radius", 3 , 1)  
     gd.showDialog()  
     
     if gd.wasCanceled():  
         print "User canceled dialog!"  
-        return  
-    # Read out the options  
-    name = gd.getNextString()  
+        sys.exit()  
+    # Read out the options    
     beta = gd.getNextNumber()
     patchradius = gd.getNextNumber()
-    searchradius = gd.getNextNumber()  
-    background = gd.getNextBoolean()   
-    return name, beta, patchradius, searchradius, background  
+    searchradius = gd.getNextNumber()     
+    return beta, patchradius, searchradius  
  
 
 
@@ -64,7 +62,7 @@ print "mean:", InStats.mean, "minimum:", InStats.min, "maximum:", InStats.max
 
 options = getOptions()  
 if options is not None:  
-    name, beta, patchradius, searchradius, background = options  
+    beta, patchradius, searchradius = options  
     
 
 
@@ -106,10 +104,6 @@ medianFilterStats = StackStatistics(medianFilteredImage)
 print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max
 
     
-    
-
-# Background Detection
-mask = [1]*(x*y*z)
 
 
 # Anscombe transform to convert Poisson noise into Gaussian noise
@@ -159,29 +153,26 @@ for i in xrange(1 , z + 1):
     InputImgArray.extend(pixels2)
 
 
-# Noise Estimation
-start_time = time.time()
-print "Wavelet-based local estimation"
+InputImg.flush()
 
-MAP = LocalNoiseEstimation.estimate(InputImgArray, x, y, z, (2*searchradius))
+
+# Noise Estimation and Non-Local Means Filter
+start_time = time.time()
+print "Denoising: NoiseEstimation + 3D Optimized Non-local Means Filter"
+fimg = JNApackage.NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z)) 
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
 
-# Denoising
-start_time = time.time()
-print "Denoising: 3D Optimized Non-local Means Filter"
-fimg = JNApackage.ONLMTest.ONLMInputs(InputImgArray, int(searchradius), int(patchradius), MAP, beta, medfiltArray, mask, int(x), int(y), int(z))
-elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
-print 'mean:', sum(fimg)/len(fimg) , 'min:' , min(fimg) , 'max:', max(fimg)
- 
+  
 
 # Optimal Inverse Anscombe Transform
 start_time = time.time()
 print "Inverse Anscombe"
-fimg = InverseAnscombe.InvAnscombe(fimg)
+fimg = JNApackage.InverseAnscombe.OVST(fimg)
+elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
+
 
 
 
@@ -189,36 +180,20 @@ outputstack = ImageStack(x, y, z )
 
 for i in xrange(0, z):  
     # Get the slice at index i and assign array elements corresponding to it.
-    cp = outputstack.setPixels(fimg[int(i*x*y):int((i+1)*x*y)], i+1)
+    outputstack.setPixels(fimg[int(i*x*y):int((i+1)*x*y)], i+1)
 
 print 'Preparing denoised image for display '
 outputImp = ImagePlus("Output Image", outputstack)    
 print "OutputImage Stats:"
 Stats = StackStatistics(outputImp)
-print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max 
+print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
+
+
+
+outputImp.setDisplayRange(Stats.min, Stats.max) 
 
 outputImp.show()  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
  
-#fs =  FileSaver(newImage)
-#fs.save() 
-
-
-# Temporary Reusable code
-#Stats = StackStatistics()
-#print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
-#medfiltArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  medfiltArray)    
-#InputImgArray = map(lambda x: 2 * math.sqrt(x + const  ) ,  InputImgArray)
+fs =  FileSaver(outputImp)
+fs.save() 
