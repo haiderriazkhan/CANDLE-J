@@ -1,6 +1,6 @@
 /* Haider Khan - haiderriazkhan@hotmail.com                               */
 /* Ruthazer Lab, Montreal Neurological Institute.                         */
-/* Mc Gill University                                                     */
+/* McGill University                                                     */
 /*                                                                        */
 /* The algorithms in this program were developed with the guidance of     */
 /* Raymond Phan (ray@bublcam.com).                                        */
