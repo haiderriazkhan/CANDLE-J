@@ -1,6 +1,6 @@
 /* Haider Khan - haiderriazkhan@hotmail.com                               */
 /* Ruthazer Lab, Montreal Neurological Institute.                         */
-/* McGill University                                                     */
+/* McGill University                                                      */
 /*                                                                        */
 /* The algorithms in this program were developed with the guidance of     */
 /* Raymond Phan (ray@bublcam.com).                                        */
@@ -25,10 +25,8 @@
 
 
 
-
-
-
-
+// If x is a power of 2, the method simply retunrs x.
+// If x is not a power of 2, the method returns the next greatest power of 2.
 int lp2 (unsigned int x) {
     if (x == 0) return 0;
     unsigned int result = 1;
@@ -40,12 +38,12 @@ int lp2 (unsigned int x) {
 
 
 
-
+// Returns the minimum value of the inout array
 float minimum(float *A , int size){
     
     float min = A[0];
     
-    for (int i =0; i < size; i++) {
+    for (int i =1; i < size; i++) {
         
         if (A[i] < min) {
             
@@ -61,7 +59,7 @@ float minimum(float *A , int size){
 }
 
 
-
+// Sorts the array using the quick sort algorithm
 void quick_sort (float *a, int n) {
     int i, j;
     float p, t;
@@ -84,7 +82,8 @@ void quick_sort (float *a, int n) {
 }
 
 
-float median(float *A, int size){
+// Returns the median value of the input array
+float medianSmall(float *A, int size){
     
     float med;
     float Sorted[size];
@@ -110,7 +109,37 @@ float median(float *A, int size){
 
 
 
+float medianLarge(float *A, int size){
+    
+    float *Sorted, med;
+    
+    Sorted = (float*)malloc(sizeof(float) * size );
+    
+    memcpy(Sorted , A, sizeof(float) * size ) ;
+    
+    quick_sort(Sorted , size);
+    
+    if (size % 2) {
+        
+        med = Sorted[size/2] ;
+        
+    }else{
+        
+        med = ( Sorted[size/2] + Sorted[(size/2) - 1] ) / 2 ;
+        
+        
+    }
+    
+    free(Sorted);
+    return med;
+    
+}
 
+
+
+
+
+// 3D circular shift (along dimension 1)
 float * cshift3D(float*x , int N1 , int N2 , int N3 ){
     int i, j , k, counter;
     float *y;
@@ -146,7 +175,7 @@ float * cshift3D(float*x , int N1 , int N2 , int N3 ){
 
 
 
-
+// Rearranges dimension of A as specified
 float * permute(float*A , int rows ,int cols ,int slices ,int*p ,int per_or_iper){
     
     int ii, jj , kk, rows_final , cols_final , slices_final;
@@ -222,16 +251,21 @@ float * permute(float*A , int rows ,int cols ,int slices ,int*p ,int per_or_iper
     
 }
 
-
+// N-D convolution algorithm similar to the one provided by MatLab
+// The pre-computed convolution kernel is initialized within the method
+// Also downsamples the output at the end
 float * convn(float* xin , int rows, int cols){
     int outrows, temprows, count, counter, x , y , z , i , j;
     float s;
-    float *out;
+    float *out , *temporary;
     
     float hpf[10] = {0 , 0 , -0.08838834764832 , -0.08838834764832 , 0.69587998903400 , -0.69587998903400, 0.08838834764832, 0.08838834764832, 0.01122679215254 , -0.01122679215254} ;
     
     temprows = rows + 9;
-    float temp[temprows*cols];
+    
+    temporary = (float*)malloc(sizeof(float) * ( temprows * cols ) );
+    
+    
     
     count = 0;
     
@@ -261,7 +295,7 @@ float * convn(float* xin , int rows, int cols){
                 
             }
             
-            temp[count++] = s;
+            temporary[count++] = s;
         }
         
     }
@@ -278,10 +312,11 @@ float * convn(float* xin , int rows, int cols){
     
     for (i = 0; i < temprows; i += 2) {
         for (j = 0; j < cols; j++) {
-            out[count++] = temp[(i*cols) + j];
+            out[count++] = temporary[(i*cols) + j];
         }
     }
     
+    free(temporary);
     return out;
     
     
@@ -291,12 +326,12 @@ float * convn(float* xin , int rows, int cols){
 
 
 
-
+// 3D Filter Bank
 float * afb3D_A(float*x , int d, int xx, int yy, int zz){
 
     int L, i, N1, N2, N3 , zloc, xloc, yloc, counter;
     
-    float *perm,  *cshif, *iperm, *hi;
+    float *perm,  *cshif, *iperm, *hi , *xTemp;
     
     
     int p[3];
@@ -318,16 +353,16 @@ float * afb3D_A(float*x , int d, int xx, int yy, int zz){
 
     L = 5;
     
+    
+    
     if (d == 1) {
         N1 = xx;
-        xx = xx/2;
         N2 = yy;
         N3 = zz;
         
     }
     else if(d == 2){
         N1 = yy;
-        yy = yy/2;
         N2 = zz;
         N3 = xx;
     
@@ -335,7 +370,6 @@ float * afb3D_A(float*x , int d, int xx, int yy, int zz){
     }else{
         
         N1 = zz;
-        zz = zz/2;
         N2 = xx;
         N3 = yy;
     
@@ -347,7 +381,7 @@ float * afb3D_A(float*x , int d, int xx, int yy, int zz){
     
     
     hi = (float*)malloc(sizeof(float) * ( (L+(N1/2) )* N2 * N3 ) );
-    float xTemp[N1*N2];
+    xTemp = (float*)malloc(sizeof(float) * ( N1 * N2 ) );
     float *hiTemp;
     
     for (zloc = 0; zloc < N3; zloc++) {
@@ -369,7 +403,7 @@ float * afb3D_A(float*x , int d, int xx, int yy, int zz){
     }
     
     
-    
+    free(xTemp);
     free(cshif);
     
     
@@ -412,7 +446,7 @@ float * afb3D_A(float*x , int d, int xx, int yy, int zz){
 
 
 
-
+// Pads the 2-D image by circular repitition of the floating point numbers
 void pad2d(float *arr , float *newarr , int x , int y , int axis){
     
     int xx, yy , rowcoun, colcoun, i , row , j , col;
@@ -423,23 +457,22 @@ void pad2d(float *arr , float *newarr , int x , int y , int axis){
     
     rowcoun = 0;
     
-    colcoun = 0;
-    
     for(i=0; i < xx; i++){
-        
+        colcoun = 0;
         if(i <= (axis - 1)){
             
             row = axis - rowcoun;
             row = row % x;
             
-            if (row != 0){
+            if (row){
                 
                 row -= 1;
                 row = (x-1) - row;
-            
+                
             }
             rowcoun++;
-        
+            
+            
         }
         else if(i <= (x+axis-1) ){
             
@@ -464,15 +497,19 @@ void pad2d(float *arr , float *newarr , int x , int y , int axis){
     
         for(j=0; j < yy; j++){
             
+            
+            
             if(j <= (axis-1) ){
                 
                 col = axis - colcoun ;
                 col = col % y ;
                 
-                if(col != 0){
+                
+                if(col){
                     
                     col -= 1;
                     col = (y-1) - col;
+                    
                 }
                 
                 colcoun++;
@@ -480,6 +517,7 @@ void pad2d(float *arr , float *newarr , int x , int y , int axis){
             else if(j <= (y+axis-1)){
                 
                 col = j - axis;
+                
             
             }else{
                 
@@ -508,8 +546,11 @@ void pad2d(float *arr , float *newarr , int x , int y , int axis){
     
     
 }
-                         
-void medfilt2(float *A, float *B, int rows, int cols, int axis){
+
+// 2-D Median Filter
+// Array A is already padded
+// Array B is the output
+void medfilt2d(float *A, float *B, int rows, int cols, int axis){
     
     int winelem , ii , jj , xx , yy , inc, ind;
     
@@ -534,32 +575,25 @@ void medfilt2(float *A, float *B, int rows, int cols, int axis){
                 }
             }
             
-            B[ii*cols + jj] = median(window , winelem);
+            B[ii*cols + jj] = medianSmall(window , winelem);
             
         }
         
     
     }
     
-    
-    
 
 }
 
 
-void cleanup(float* pVals){
 
-    free(pVals);
-}
-                         
-                         
-
+// Parent method. 
 void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     int size , xx , yy , zz , i, j, k, p1 , p2 , p3, counter , z_half , x_half, y_half , padx , pady, indexx, zi, xi, yi, val ;
     float minim, Sig;
     
-    float *filt1, *filt2, *filt3, *padarray, *temp, *NsigMAP;
+    float *filt1, *filt2, *filt3, *padarray, *temp, *NsigMAP , *img2d , *img2dp;
     
     size = x*y*z;
     
@@ -587,6 +621,8 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     
     
+    
+    
     // Make the image dimesnions powers of 2
     if(p1 == x & p2==y & p3 == z){
         
@@ -611,9 +647,6 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
             }
         }
     }
-    
-    
-    free(ima);
     
     
     
@@ -647,9 +680,6 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     
     z_half = z/2 + (z % 2 != 0);
-    
-    
-    
     x_half = x/2 + (x % 2 != 0);
     y_half = y/2 + (y % 2 != 0);
     
@@ -672,16 +702,17 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     }
     
     
-    
     free(filt3);
-    Sig = median(temp , (z_half*x_half*y_half) );
+    Sig = medianLarge(temp , (z_half*x_half*y_half) );
     printf("Sig:\n");
     printf("%.6f", Sig);
     padx = x_half + 2*ps;
     pady = y_half + 2*ps;
     
-    float img2d[x_half*y_half];
-    float img2dp[padx * pady];
+    
+    img2d = (float*)malloc(sizeof(float) * ( x_half*y_half ) );
+    img2dp = (float*)malloc(sizeof(float) * ( padx * pady ) );
+    
     
     NsigMAP = (float*)malloc(sizeof(float) * ( z_half * x_half * y_half ) ) ;
     
@@ -702,11 +733,12 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
         
         memset(img2dp,0, sizeof(float) * (padx*pady) );
         
+        
         // Pad the 2d image
         pad2d(img2d , img2dp , x_half , y_half, ps);
         
         // Apply 2d median filter
-        medfilt2(img2dp , img2d,  x_half , y_half , ps);
+        medfilt2d(img2dp , img2d,  x_half , y_half , ps);
         
         indexx = k*x_half*y_half ;
         
@@ -714,6 +746,9 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
         
     }
     
+    free(temp);
+    free(img2d);
+    free(img2dp);
     
     *HHH = (float*)malloc(sizeof(float) * ( z * x * y ) );
     
@@ -761,7 +796,4 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     
 }
-
-
-
 
