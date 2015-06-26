@@ -1,3 +1,5 @@
+// Haider Khan - haiderriazkhan@hotmail.com
+//
 // Optimal inverse Anscombe Transform (AT) 
 //
 // References
@@ -5,11 +7,7 @@
 // Proc. Int. Workshop on Local and Non-Local Approx. in Image Process., LNLA 2009, Tuusula, Finland, pp. 26-32, August 2009.
 // [2] M. Makitalo and A. Foi, "Optimal inversion of the Anscombe transformation in low-count Poisson image denoising",
 // TIP 2010.
-
-// Code slightly modified from the original code of  Alessandro Foi and Markku Makitalo
-// Original Software can be downloaded from http://www.cs.tut.fi/~foi/invansc/
 //
-//  Alessandro Foi and Markku Makitalo - Tampere University of Technology - 2009
 // -------------------------------------------------------------------------------
 
 
