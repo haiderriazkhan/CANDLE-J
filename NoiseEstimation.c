@@ -38,8 +38,8 @@ int lp2 (unsigned int x) {
 
 
 
-// Returns the minimum value of the inout array
-float minimum(float *A , int size){
+// Returns the minimum value of the input array
+float minimum(int size, float A[static size] ){
     
     float min = A[0];
     
@@ -83,33 +83,7 @@ void quick_sort (float *a, int n) {
 
 
 // Returns the median value of the input array
-float medianSmall(float *A, int size){
-    
-    float med;
-    float Sorted[size];
-    
-    memcpy(Sorted , A, sizeof(float) * size ) ;
-    
-    quick_sort(Sorted , size);
-    
-    if (size % 2) {
-        
-        med = Sorted[size/2] ;
-        
-    }else{
-        
-        med = ( Sorted[size/2] + Sorted[(size/2) - 1] ) / 2 ;
-        
-        
-    }
-    
-    return med;
-
-}
-
-
-
-float medianLarge(float *A, int size){
+float median(int size , float A[static size]){
     
     float *Sorted, med;
     
@@ -176,7 +150,7 @@ float * cshift3D(float*x , int N1 , int N2 , int N3 ){
 
 
 // Rearranges dimension of A as specified
-float * permute(float*A , int rows ,int cols ,int slices ,int*p ,int per_or_iper){
+float * permute(float*A , int rows ,int cols ,int slices ,int p[static 3] ,int per_or_iper){
     
     int ii, jj , kk, rows_final , cols_final , slices_final;
     float *B;
@@ -254,7 +228,7 @@ float * permute(float*A , int rows ,int cols ,int slices ,int*p ,int per_or_iper
 // N-D convolution algorithm similar to the one provided by MatLab
 // The pre-computed convolution kernel is initialized within the method
 // Also downsamples the output at the end
-float * convn(float* xin , int rows, int cols){
+float * convn(float *const xin, int rows, int cols){
     int outrows, temprows, count, counter, x , y , z , i , j;
     float s;
     float *out , *temporary;
@@ -575,7 +549,7 @@ void medfilt2d(float *A, float *B, int rows, int cols, int axis){
                 }
             }
             
-            B[ii*cols + jj] = medianSmall(window , winelem);
+            B[ii*cols + jj] = median(winelem , window);
             
         }
         
@@ -598,8 +572,8 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     size = x*y*z;
     
     
-
-    minim = minimum(ima , size);
+    
+    minim = minimum(size , ima);
     
     if (minim < 0) {
         
@@ -703,7 +677,7 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     
     free(filt3);
-    Sig = medianLarge(temp , (z_half*x_half*y_half) );
+    Sig = median( (z_half*x_half*y_half) , temp );
     printf("Sig:\n");
     printf("%.6f", Sig);
     padx = x_half + 2*ps;
@@ -796,4 +770,7 @@ void estimate(float*ima , int x , int y , int z , int ps, float **HHH){
     
     
 }
+
+
+
 
