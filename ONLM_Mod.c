@@ -5,7 +5,7 @@
 /*                                                                         */
 /* Copyright (C) 2010 Pierrick Coupe and Jose V. Manjon                    */
 
-/*                          Details on ONLM filter                        */
+/*                          Details on ONLM filter                         */
 /***************************************************************************
  *  The ONLM filter is described in:                                       *
  *                                                                         *
@@ -14,16 +14,16 @@
  *  Resonance Images. IEEE Transactions on Medical Imaging, 27(4):425-441, *
  *  Avril 2008                                                             *
  ***************************************************************************/
+/***************************************************************************
+ *  This file was modified by Haider Khan - haiderriazkhan@hotmail.com     *
+ *                                                                         *
+ *  The ONLM C program can now be called from Java via JNA                 *
+ ***************************************************************************/
 
 
 #include "math.h"
 #include <stdlib.h>
-
-// Comment out Mex imports
-//#include "mex.h"
-//#include "matrix.h"
-
-
+#include <string.h>
 #include <stdio.h>
 
 
@@ -38,10 +38,7 @@
 
 #include <stdbool.h>
 
-//typedef enum
-//{
-  //  true=1, false=0
-//}bool;
+
 
 
 typedef struct{
@@ -53,7 +50,7 @@ typedef struct{
     float * means_image;
     float * var_image;
     float * estimate;
-    float * mask_image;
+    //float * mask_image;
     unsigned short * label;
     int ini;
     int fin;
@@ -200,10 +197,10 @@ float distance(float* ima,int x,int y,int z,int nx,int ny,int nz,int f,int sx,in
 
 void* ThreadFunc( void* pArguments )
 {
-    float *Estimate,*ima,*means,*variances,*average,*sigma,*ref,*mask,epsilon,totalweight,wmax,t1,d,w;
+    float *Estimate,*ima,*means,*variances,*sigma,*ref,*average,epsilon,totalweight,wmax,t1,d,w;
     float beta;
     unsigned short *Label;
-    int rows,cols,slices,ini,fin,v,f,init,i,j,k,rc,ii,jj,kk,ni,nj,nk,Ndims;
+    int rows,cols,slices,ini,fin,v,f,i,j,k,rc,ii,jj,kk,ni,nj,nk,Ndims;
     
     myargument arg;
     arg=*(myargument *) pArguments;
@@ -217,7 +214,7 @@ void* ThreadFunc( void* pArguments )
     ref=arg.ref_image;
     means=arg.means_image;
     variances=arg.var_image;
-    mask = arg.mask_image;
+    //mask = arg.mask_image;
     Estimate=arg.estimate;
     Label=arg.label;
     v=arg.radioB;
@@ -226,7 +223,7 @@ void* ThreadFunc( void* pArguments )
     beta= arg.beta;
     
     epsilon = 0.0000001;
-    init = 0;
+    
     rc=rows*cols;
     
     Ndims = (2*f+1)*(2*f+1)*(2*f+1);
@@ -239,82 +236,69 @@ void* ThreadFunc( void* pArguments )
         {
             for(i=0;i<cols;i+=2)
             {
-                for (init=0 ; init < Ndims; init++) average[init]=0.0;
+                memset(average,0.0, sizeof(float) * Ndims );
                 
                 totalweight=0.0;
                 
                 wmax=0.0;
                 
                 
-                if(mask[k*rc+(j*cols)+i]>0)
+                for(kk=-v;kk<=v;kk++)
                 {
-                    for(kk=-v;kk<=v;kk++)
+                    for(jj=-v;jj<=v;jj++)
                     {
-                        for(jj=-v;jj<=v;jj++)
+                        for(ii=-v;ii<=v;ii++)
                         {
-                            for(ii=-v;ii<=v;ii++)
+                            ni=i+ii;
+                            nj=j+jj;
+                            nk=k+kk;
+                            
+                            if(ii==0 && jj==0 && kk==0) continue;
+                            
+                            if(ni>=0 && nj>=0 && nk>=0 && ni<cols && nj<rows && nk<slices)
                             {
-                                ni=i+ii;
-                                nj=j+jj;
-                                nk=k+kk;
-                                
-                                if(ii==0 && jj==0 && kk==0) continue;
-                                
-                                if(ni>=0 && nj>=0 && nk>=0 && ni<cols && nj<rows && nk<slices)
+                                t1 = ((2 * means[k*rc+(j*cols)+i] * means[nk*rc+(nj*cols)+ni]+ epsilon) / ( means[k*rc+(j*cols)+i]*means[k*rc+(j*cols)+i] + means[nk*rc+(nj*cols)+ni]*means[nk*rc+(nj*cols)+ni] + epsilon) )  * ((2 * sqrt(variances[k*rc+(j*cols)+i]) * sqrt(variances[nk*rc+(nj*cols)+ni]) + epsilon) / (variances[k*rc+(j*cols)+i] + variances[nk*rc+(nj*cols)+ni] + epsilon));
+                                if(t1 > 0.9)
                                 {
-                                    t1 = ((2 * means[k*rc+(j*cols)+i] * means[nk*rc+(nj*cols)+ni]+ epsilon) / ( means[k*rc+(j*cols)+i]*means[k*rc+(j*cols)+i] + means[nk*rc+(nj*cols)+ni]*means[nk*rc+(nj*cols)+ni] + epsilon) )  * ((2 * sqrt(variances[k*rc+(j*cols)+i]) * sqrt(variances[nk*rc+(nj*cols)+ni]) + epsilon) / (variances[k*rc+(j*cols)+i] + variances[nk*rc+(nj*cols)+ni] + epsilon));
-                                    if(t1 > 0.9)
-                                    {
-                                        
-                                        d=distance(ref,i,j,k,ni,nj,nk,f,cols,rows,slices);
-                                        if (d<=0) d = epsilon;
-                                        
-                                        w = exp(-d/(beta*sigma[k*(rc)+(j*cols)+i]*sigma[k*(rc)+(j*cols)+i]));
-                                        
-                                        if(w>wmax) wmax = w;
-                                        
-                                        
-                                        Average_block(ima,ni,nj,nk,f,average,w,cols,rows,slices);
-                                        totalweight = totalweight + w;
-                                        
-                                    }
-                               
+                                    
+                                    d=distance(ref,i,j,k,ni,nj,nk,f,cols,rows,slices);
+                                    if (d<=0) d = epsilon;
+                                    
+                                    w = exp(-d/(beta*sigma[k*(rc)+(j*cols)+i]*sigma[k*(rc)+(j*cols)+i]));
+                                    
+                                    if(w>wmax) wmax = w;
+                                    
+                                    
+                                    Average_block(ima,ni,nj,nk,f,average,w,cols,rows,slices);
+                                    totalweight = totalweight + w;
                                     
                                 }
+                                
+                                
                             }
                         }
-                        
                     }
                     
-                    if(wmax==0.0) wmax=1.0;
-                    
-                    Average_block(ima,i,j,k,f,average,wmax,cols,rows,slices);
-                    
-                    totalweight = totalweight + wmax;
-                    
-                    
-                    if(totalweight != 0.0)
-                        Value_block(Estimate,Label,i,j,k,f,average,totalweight,cols,rows,slices);
                 }
-                else
-                {
-                     wmax=1.0;
-                    
-                    Average_block(ref,i,j,k,f,average,wmax,cols,rows,slices);
-                    
-                    totalweight = totalweight + wmax;
-                    
-                    
-                    if(totalweight != 0.0)
-                        Value_block(Estimate,Label,i,j,k,f,average,totalweight,cols,rows,slices);
-                }
-                    
-                    
+                
+                if(wmax==0.0) wmax=1.0;
+                
+                Average_block(ima,i,j,k,f,average,wmax,cols,rows,slices);
+                
+                totalweight = totalweight + wmax;
+                
+                
+                if(totalweight != 0.0)
+                    Value_block(Estimate,Label,i,j,k,f,average,totalweight,cols,rows,slices);
+                
             }
         }
     }
     
-      #ifdef _WIN32
+    free(average);
+    
+    
+    #ifdef _WIN32
             _endthreadex(0);
       return 0;
     #else
@@ -331,29 +315,18 @@ void cleanup(float* pVals)
 	free(pVals);
 }
 
-void cleanup2(unsigned short* pVals){
-    free(pVals);
-}
 
 
-void Hello()
-{
-	printf("Here\n");
-}
-
-
-//void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
-
-void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , float* mask, int rows, int cols, int slices, float** fima)
+void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , int rows, int cols, int slices, float** fima)
 
 {
     
     
-    float *average, *means, *variances, *Estimate;
+    float *means, *variances, *Estimate;
     unsigned short *Label;
     float w,totalweight,wmax,d,mean,var,t1,t2,epsilon,label,estimate;
     
-    int Ndims,i,j,k,ii,jj,kk,ni,nj,nk,ndim,indice,init,Nthreads,ini,fin;
+    int i,j,k,ii,jj,kk,ni,nj,nk,indice,Nthreads,ini,fin;
     
     
     
@@ -367,21 +340,21 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     
     
     
-    ndim = 3;
+    
     const int dims[3] = {cols, rows, slices};
     
-    Ndims = pow((2*f+1),ndim);
+    // Ndims = pow((2*f+1),ndim);
     
     
-    average=(float*)malloc(Ndims*sizeof(float));
+    // average=(float*)malloc(Ndims*sizeof(float));
     
     
-    int sizehaider = (rows*cols*slices);
-    *fima = (float*)malloc(sizeof(float) * sizehaider);
-    means = (float*)malloc(sizeof(float) * sizehaider);
-    variances = (float*)malloc(sizeof(float) * sizehaider);
-    Estimate = (float*)malloc(sizeof(float) * sizehaider);
-    Label = (unsigned short*)malloc(sizeof(unsigned short) * sizehaider);
+    int totalsize = (rows*cols*slices);
+    *fima = (float*)malloc(sizeof(float) * totalsize);
+    means = (float*)malloc(sizeof(float) * totalsize);
+    variances = (float*)malloc(sizeof(float) * totalsize);
+    Estimate = (float*)malloc(sizeof(float) * totalsize);
+    Label = (unsigned short*)malloc(sizeof(unsigned short) * totalsize);
     
     
     
@@ -485,7 +458,7 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
         ThreadArgs[i].slices=dims[2];
         ThreadArgs[i].in_image=ima;
         ThreadArgs[i].ref_image=ref;
-        ThreadArgs[i].mask_image=mask;
+        //ThreadArgs[i].mask_image=mask;
         ThreadArgs[i].var_image=variances;
         ThreadArgs[i].means_image=means;
         ThreadArgs[i].estimate=Estimate;
@@ -518,7 +491,7 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
         ThreadArgs[i].slices=dims[2];
         ThreadArgs[i].in_image=ima;
         ThreadArgs[i].ref_image=ref;
-        ThreadArgs[i].mask_image=mask;
+        //ThreadArgs[i].mask_image=mask;
         ThreadArgs[i].var_image=variances;
         ThreadArgs[i].means_image=means;
         ThreadArgs[i].estimate=Estimate;
@@ -554,6 +527,11 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     free(ThreadArgs);
     free(ThreadList);
     
+    free(variances);
+    free(means);
+    //free(ref);
+    free(sigma);
+    
     
     label = 0.0;
     estimate = 0.0;
@@ -586,19 +564,9 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     
     
     
-    
-    
-    cleanup(average);
-    cleanup2(Label);
-    cleanup(Estimate);
-    cleanup(variances);
-    cleanup(means);
-    
-    
-    
-    
-    
-
+    //free(Estimate);
+    //free(Label);
+    //free(ima);
     
     
 }
