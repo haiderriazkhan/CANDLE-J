@@ -50,7 +50,6 @@ typedef struct{
     float * means_image;
     float * var_image;
     float * estimate;
-    //float * mask_image;
     unsigned short * label;
     int ini;
     int fin;
@@ -214,7 +213,6 @@ void* ThreadFunc( void* pArguments )
     ref=arg.ref_image;
     means=arg.means_image;
     variances=arg.var_image;
-    //mask = arg.mask_image;
     Estimate=arg.estimate;
     Label=arg.label;
     v=arg.radioB;
@@ -343,11 +341,6 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     
     const int dims[3] = {cols, rows, slices};
     
-    // Ndims = pow((2*f+1),ndim);
-    
-    
-    // average=(float*)malloc(Ndims*sizeof(float));
-    
     
     int totalsize = (rows*cols*slices);
     *fima = (float*)malloc(sizeof(float) * totalsize);
@@ -458,7 +451,6 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
         ThreadArgs[i].slices=dims[2];
         ThreadArgs[i].in_image=ima;
         ThreadArgs[i].ref_image=ref;
-        //ThreadArgs[i].mask_image=mask;
         ThreadArgs[i].var_image=variances;
         ThreadArgs[i].means_image=means;
         ThreadArgs[i].estimate=Estimate;
@@ -491,7 +483,6 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
         ThreadArgs[i].slices=dims[2];
         ThreadArgs[i].in_image=ima;
         ThreadArgs[i].ref_image=ref;
-        //ThreadArgs[i].mask_image=mask;
         ThreadArgs[i].var_image=variances;
         ThreadArgs[i].means_image=means;
         ThreadArgs[i].estimate=Estimate;
@@ -529,7 +520,6 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     
     free(variances);
     free(means);
-    //free(ref);
     free(sigma);
     
     
@@ -564,9 +554,6 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
     
     
     
-    //free(Estimate);
-    //free(Label);
-    //free(ima);
     
     
 }
