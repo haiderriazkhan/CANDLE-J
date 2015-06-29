@@ -23,9 +23,10 @@ from ij.process import StackStatistics
 import array 
 import time
 from ij.gui import GenericDialog
-import JNApackage
 from ij.io import FileSaver
 import sys
+import NativeCodeJNA
+import InverseAnscombe
 
 
 
@@ -159,7 +160,7 @@ InputImg.flush()
 # Noise Estimation and Non-Local Means Filter
 start_time = time.time()
 print "Denoising: NoiseEstimation + 3D Optimized Non-local Means Filter"
-fimg = JNApackage.NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z)) 
+fimg = NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z)) 
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
@@ -169,7 +170,7 @@ print "Elapsed time:", elapsed_time
 # Optimal Inverse Anscombe Transform
 start_time = time.time()
 print "Inverse Anscombe"
-fimg = JNApackage.InverseAnscombe.OVST(fimg)
+fimg = InverseAnscombe.OVST(fimg)
 elapsed_time = time.time() - start_time
 print "Elapsed time:", elapsed_time
 
