@@ -5,8 +5,8 @@ CANDLE-J is a multi-language image denoising software designed as an [Image-J64]
 
 The denoising algorithms are written in Jython, Java and C. The C methods are accessed with the aide of the Java Native Access library. The Optimized Non Local Means Filter (ONLM) is the bottleneck of the CANDLE-J software and hence the ONLM algorithm is written as a multithreaded C program to improve performance. 
 
-Installing CANDLE-J
-===================
+#Installing CANDLE-J
+
 
 
 Haider Riaz Khan   
