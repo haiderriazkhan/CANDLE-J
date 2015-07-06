@@ -12,7 +12,7 @@
  *  P. Coupe, P. Yger, S. Prima, P. Hellier, C. Kervrann, C. Barillot.     *
  *  An Optimized Blockwise Non Local Means Denoising Filter for 3D Magnetic*
  *  Resonance Images. IEEE Transactions on Medical Imaging, 27(4):425-441, *
- *  Avril 2008                                                             *
+ *  April 2008                                                             *
  ***************************************************************************/
 /***************************************************************************
  *  This file was modified by Haider Khan - haiderriazkhan@hotmail.com     *
