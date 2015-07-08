@@ -29,7 +29,7 @@ public static Object[] loadOVSTable(){
 	int index = 0;
 
 	try {
-	      BufferedReader in = new BufferedReader(new FileReader("plugins/CANDLE/Table.dat"));
+	      BufferedReader in = new BufferedReader(new FileReader("plugins/CANDLE-J/Table.dat"));
 	      String str ;
 
 	      while ((str = in.readLine()) != null) {

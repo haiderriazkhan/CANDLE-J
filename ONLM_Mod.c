@@ -552,8 +552,8 @@ void ONLM(float* ima , int v , int f , float* sigma , float beta , float* ref , 
         }
     }
     
-    
-    
+    free(Estimate);
+    free(Label);
     
     
 }
