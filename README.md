@@ -26,11 +26,14 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 5 - A dialog box and a GUI to select filtering parameters will appear.
 
 <div align="left">
-        <img width="45%" height="45%" src="/Images/ParameterBox.png" </img>
+        <img width="55%" height="60%" src="/Images/ParameterBox.png" </img>
 </div>
 
+- First, select the smoothing parameter (beta). This parameter controls the amount of denoising to be applied. Generally, values between 0.1 and 0.4 are fine for visualization. Higher values may be useful for segmentation or registration purposes.
+- Second, select the patch radius. A radius of 1 voxel (i.e., patch of 3x3x3 voxels) is usually appropriate for a greater view of fine structures. A radius of 2 voxels (i.e., patch of 5x5x5 voxels) should be favoured for a restricted field of view of large structures.
+- The radius of the search volume can also be changed but it is not recommended to increase it (higher computational time).
 
-
+6- Once CANDLE-J has run its course, the ouput image will appear along with a save dialog box. 
 
 
 Haider Riaz Khan   
