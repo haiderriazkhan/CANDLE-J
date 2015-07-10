@@ -24,7 +24,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 </div>
 4- Select a input 3D tiff image by navigating in the window that appears.
 
-5 - A dialog box and a GUI to select filtering parameters will appear.
+5 - A GUI to select filtering parameters will appear. Also a dialog box to keep the user updated regarding the progress of the program. 
 
 <div align="center">
         <img width="55%" height="100%" src="/Images/ParameterBox.png" </img>
@@ -35,7 +35,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 - The radius of the search volume can also be changed but it is not recommended to increase it (higher computational time).
 
 
-6- Once CANDLE-J has run its course, the ouput image will appear along with a save dialog box. 
+6- Once CANDLE-J has run its course, the ouput image will be displayed (can be manipulated further with ImageJ) along with a save dialog box. 
 
 
 
