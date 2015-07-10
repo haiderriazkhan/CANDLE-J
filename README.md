@@ -13,14 +13,20 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 - In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" />
 
 ### Usage
-1. Open ImageJ
-2. Go to the Plugins dropdown menu.
-3. Hover your mouse on CANDLE-J and click CANDLE.
+1- Open ImageJ
+2- Go to the Plugins dropdown menu.
+3- Hover your mouse on CANDLE-J and click CANDLE.
 
 <div align="left">
         <img width="45%" src="/Images/ImageJ_Menu.png" </img>
 </div>
-4. Yoo 
+4- Select a input 3D tiff image by navigating in the window that appears.
+5 - A dialog box and a GUI to select filtering parameters will appear.
+<div align="left">
+        <img width="45%" height="45%" src="/Images/ParameterBox.png" </img>
+</div>
+
+
 
 
 
