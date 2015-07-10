@@ -10,7 +10,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 **Important** 
 - For a Mac OS X; CANDLE-J should be used with `ImageJ64`(64-bit) instead of the version simply named `ImageJ` (32-bit). `ImageJ64` comes bundled with the downloaded ImageJ zip file.
-- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon <img src="Images/LinuxLogo.png" width="20" height="20" />
+- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="22" height="22" />
 
 ### Usage
 
