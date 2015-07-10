@@ -37,6 +37,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 6- Once CANDLE-J has run its course, the ouput image will be displayed (can be manipulated further with ImageJ) along with a save dialog box. 
 
+                                                *         *         *  
 
 
 ### Contact
