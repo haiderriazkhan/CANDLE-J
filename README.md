@@ -15,7 +15,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 ### Usage
 1. Open ImageJ
 2. Go to the Plugins dropdown menu.
-3. Hover your mouse on CANDLE-J and click CANDLE. ![alt text](/Images/ImageJ_Menu.png){:height="36px" width="36px"}
+3. Hover your mouse on CANDLE-J and click CANDLE. ![alt text](/Images/ImageJ_Menu.png){:height="15px" width="15px"}
 4. Yo 
 
 
