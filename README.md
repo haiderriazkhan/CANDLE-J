@@ -5,7 +5,7 @@ CANDLE-J is a multi-language image denoising software designed as an [ImageJ](ht
 
 The denoising algorithms are written in Jython, Java and C. The C methods are accessed with the aide of the Java Native Access library. The Optimized Non Local Means Filter (ONLM) is the bottleneck of the CANDLE-J software and hence the ONLM algorithm is written as a multithreaded C program to improve performance. Additionally, the two C programs were compiled with the GCC optimizing option `-O3` turned on. The `-O3` option makes the compiler strive to improve the performance of the object code.       
 
-### Installing CANDLE-J
+### Install
 CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the computer. If ImageJ is not already installed, click [here](http://imagej.nih.gov/ij/download.html) to download the appropriate version. In the top header of this repository, click **release**. Depending on your operating system, either download the `MacOSX.zip` or `Linux.tar.gz` file from the listing. Unzip the downloaded file, and place the resultant `CANDLE-J` folder in the `plugins` folder of your local ImageJ directory. Open ImageJ (restart ImageJ if it is already open) and CANDLE-J should be available to use from the `Plugins` dropdown menu. 
 
 **Important** 
@@ -22,9 +22,9 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 <div align="left">
         <img width="45%" src="/Images/ImageJ_Menu.png" </img>
 </div>
-4- Select a input 3D tiff image by navigating in the window that appears.
+4- Select an input 3D tiff image by navigating in the window that appears.
 
-5 - A GUI to select filtering parameters will appear. Also a dialog box to keep the user updated regarding the progress of the program. 
+5 - A GUI to select filtering parameters will appear. Also a dialog box will show up to keep the user updated regarding the progress of the program. 
 
 <div align="center">
         <img width="55%" height="100%" src="/Images/ParameterBox.png" </img>
@@ -39,6 +39,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 
 
+### Contact
 
 Haider Riaz Khan   
 haider.riaz@mail.mcgill.ca  
