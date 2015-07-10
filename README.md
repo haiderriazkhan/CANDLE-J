@@ -27,7 +27,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 5 - A GUI to select filtering parameters will appear. Also a dialog box will show up to keep the user updated regarding the progress of the program. 
 
 <div align="center">
-        <img width="55%" height="100%" src="/Images/ParameterBox.png" </img>
+        <img width="65%" height="100%" src="/Images/ParameterBox.png" </img>
 </div>
 
 - First, select the smoothing parameter (beta). This parameter controls the amount of denoising to be applied. Generally, values between 0.1 and 0.4 are fine for visualization. Higher values may be useful for segmentation or registration purposes.
@@ -37,7 +37,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 6- Once CANDLE-J has run its course, the ouput image will be displayed (can be manipulated further with ImageJ) along with a save dialog box. 
 
-                                                *         *         *  
+                                        *         *         *  
 
 
 ### Contact
