@@ -14,7 +14,9 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 ### Usage
 1- Open ImageJ
+
 2- Go to the Plugins dropdown menu.
+
 3- Hover your mouse on CANDLE-J and click CANDLE.
 
 <div align="left">
@@ -23,7 +25,9 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 4- Select a input 3D tiff image by navigating in the window that appears.
 5 - A dialog box and a GUI to select filtering parameters will appear.
 
-
+<div align="left">
+        <img width="45%" height="45%" src="/Images/ParameterBox.png" </img>
+</div>
 
 
 
