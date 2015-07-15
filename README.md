@@ -9,8 +9,8 @@ The denoising algorithms are written in Jython, Java and C. The C methods are ac
 CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the computer. If ImageJ is not already installed, click [here](http://imagej.nih.gov/ij/download.html) to download the appropriate version. In the top header of this repository, click **release**. Depending on your operating system, either download the `MacOSX.zip` or `Linux.tar.gz` file from the listing. Unzip the downloaded file, and place the resultant `CANDLE-J` folder in the `plugins` folder of your local ImageJ directory. Open ImageJ (restart ImageJ if it is already open) and CANDLE-J should be available to use from the `Plugins` dropdown menu. 
 
 **Important** 
-- For a Mac OS X; CANDLE-J should be used with `ImageJ64`(64-bit) instead of the version simply named `ImageJ` (32-bit). `ImageJ64` comes bundled with the downloaded ImageJ zip file.
-- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" />
+- For a Mac OS X; CANDLE-J should be used with the default `ImageJ`(64-bit) instead of the version named `ImageJ32` (32-bit). Both come bundled with the downloaded ImageJ zip file.
+- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" /> This version runs CANDLE-J from within the ImageJ directory and allows it to use relative class path files. 
 
 ### Usage
 1- Open ImageJ
