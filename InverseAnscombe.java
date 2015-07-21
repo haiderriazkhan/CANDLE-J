@@ -17,6 +17,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import ij.IJ;
 
 
 public class InverseAnscombe {
@@ -42,7 +43,7 @@ public static Object[] loadOVSTable(){
 	    } 
 	catch (IOException e) 
 	{
-		e.printStackTrace();
+		IJ.log("Error: Could not load pre-computed correspondence table.");
 	}
 	
 	return new Object[]{firstColumn, secondColumn};
@@ -102,35 +103,35 @@ public static float[] interp1(double[] x, double[] y, float[]xq){
 		
 		if(pt < x[0]){
 			x1 = x[0];
-		    	x2 = x[1];
-		    	y1 = y[0];
-		    	y2 = y[1];
+		    x2 = x[1];
+		    y1 = y[0];
+		    y2 = y[1];
 		}else if(pt > x[x.length-1]){
 			x1 = x[x.length-2];
-		    	x2 = x[x.length-1];
-		    	y1 = y[x.length-2];
-		    	y2 = y[x.length-1];
+		    x2 = x[x.length-1];
+		    y1 = y[x.length-2];
+		    y2 = y[x.length-1];
 			
 		}else{
 			
 			index = binary_search(x, pt);
 			
 			x1 = x[index];
-		    	x2 = x[index+1];
-		    	y1 = y[index];
-		    	y2 = y[index+1];
+		    x2 = x[index+1];
+		    y1 = y[index];
+		    y2 = y[index+1];
 			
 		}
 		
 		m = (y2 - y1) / (x2 - x1);
-	    	interp = y1 + m*(pt - x1);
-	    	
-	    	if(interp < 0){
-            		vq[counter++] = 0;
-            		continue;
-        	}
-        	
-	    	vq[counter++] = (float)interp;
+	    interp = y1 + m*(pt - x1);
+        
+        if(interp < 0){
+            vq[counter++] = 0;
+            continue;
+        }
+        
+	    vq[counter++] = (float)interp;
 		
 	}
 	
@@ -173,7 +174,10 @@ public static float[] OVST(float[] fimg){
 		}
 		
 		return optimalinvfimg;
+    
 		
 	}
 
 }
+
+

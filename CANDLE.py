@@ -30,7 +30,6 @@ import InverseAnscombe
 
 
 
-
 # function that opens up a dialog box where the user inputs filter parameters 
 def getOptions():  
     gd = GenericDialog("Options") 
@@ -158,11 +157,11 @@ InputImg.flush()
 
 
 # Noise Estimation and Non-Local Means Filter
-start_time = time.time()
-print "Denoising: NoiseEstimation + 3D Optimized Non-local Means Filter"
-fimg = NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z)) 
-elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
+
+print "Going Native ..."
+fimg = NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z))
+
+
 
 
   
