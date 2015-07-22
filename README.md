@@ -11,7 +11,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 **Important** 
 - For a Mac OS X; CANDLE-J should be used with the default `ImageJ` (64-bit) instead of the version named `ImageJ32` (32-bit). Both come bundled with the downloaded ImageJ zip file.
 
-- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" /> This version runs plugins from within the ImageJ directory and allows CANDLE-J to use relative file paths. 
+- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" /> If the wrong version is used, the ImageJ log window will have an additional statement after CANDLE-J is finished running; `Error: Could not load pre-computed correspondence table`.  
 
 ### Usage
 1- Open ImageJ
