@@ -27,7 +27,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 <div align="left">
         <img width="45%" src="/png/ImageJ_Menu.png" </img>
 </div>
-4- Select an input 3D tiff image by navigating in the window that appears.
+4- Select an input 3D tiff image (stack of 2D tiff images) by navigating in the window that appears.
 
 5 - A GUI to select filtering parameters will appear. Also a dialog box will show up to keep the user updated regarding the progress of the program. 
 
@@ -43,7 +43,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 6- Once CANDLE-J has run its course, the ouput image will be displayed (can be manipulated further with ImageJ) along with a save dialog box. 
 
 
-**Note -** A noisy image stack is provided to test architecture compatibility and ensure that CANDLE-J is working properly. To download the noisy image stack, go to the `TestImages` folder located in the list of files above and download `NoisyImage.tif`. You can also download `DenoisedImage.tif` from the same folder to see how the noisy image stack is supposed to look like after being denoised (using the default parameters) by CANDLE-J.
+**Note -** A noisy sample image stack is provided to test architecture compatibility and ensure that CANDLE-J is working properly. To download the noisy image stack, go to the `Sample Images` folder located in the list of files above and download `NoisyImage.tif`. You can also download `DenoisedImage.tif` from the same folder to see how the noisy image stack is supposed to look like after being denoised (using the default parameters) by CANDLE-J.
 
                                         *         *         *  
 
