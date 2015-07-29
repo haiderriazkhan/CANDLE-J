@@ -11,7 +11,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 **Important** 
 - For a Mac OS X; CANDLE-J should be used with the default `ImageJ` (64-bit) instead of the version named `ImageJ32` (32-bit). Both come bundled with the downloaded ImageJ zip file.
 
-- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Icons/LinuxLogo.png" width="24" height="24" /> Using the wrong version causes an additional statement to appear in the ImageJ log window, `Error: Could not load pre-computed correspondence table`.
+- In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="png/LinuxLogo.png" width="24" height="24" /> Using the wrong version causes an additional statement to appear in the ImageJ log window, `Error: Could not load pre-computed correspondence table`.
 
 - There is no version for Windows as of yet. The Github repo will be updated as soon as one is available.  
 
@@ -25,14 +25,14 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 3- Hover your mouse on CANDLE-J and click CANDLE.
 
 <div align="left">
-        <img width="45%" src="/Icons/ImageJ_Menu.png" </img>
+        <img width="45%" src="/png/ImageJ_Menu.png" </img>
 </div>
 4- Select an input 3D tiff image by navigating in the window that appears.
 
 5 - A GUI to select filtering parameters will appear. Also a dialog box will show up to keep the user updated regarding the progress of the program. 
 
 <div align="center">
-        <img width="65%" height="100%" src="/Icons/ParameterBox.png" </img>
+        <img width="65%" height="100%" src="/png/ParameterBox.png" </img>
 </div>
 
 - First, select the smoothing parameter (beta). This parameter controls the amount of denoising to be applied. Generally, values between 0.1 and 0.4 are fine for visualization. Higher values may be useful for segmentation or registration purposes.
