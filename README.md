@@ -13,6 +13,9 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 
 - In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="Images/LinuxLogo.png" width="24" height="24" /> Using the wrong version causes an additional statement to appear in the ImageJ log window, `Error: Could not load pre-computed correspondence table`.
 
+- There is no version for Windows as of yet. The Github repo will be updated as soon as one is available.  
+
+
 ### Usage
 1- Open ImageJ
 
