@@ -27,7 +27,7 @@ CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the
 <div align="left">
         <img width="45%" src="/png/ImageJ_Menu.png" </img>
 </div>
-4- Select an input 3D tiff image (stack of 2D tiff images) by navigating in the window that appears.
+4- Select an input 3D tiff image (stack of .tiff images) by navigating in the window that appears.
 
 5 - A GUI to select filtering parameters will appear. Also a dialog box will show up to keep the user updated regarding the progress of the program. 
 
