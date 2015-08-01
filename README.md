@@ -6,14 +6,13 @@ CANDLE-J is a multi-language image denoising software designed as an [ImageJ](ht
 The denoising algorithms are written in Jython, Java and C. The C methods are accessed with the aide of the Java Native Access library. The Optimized Non Local Means Filter (ONLM) is the bottleneck of the CANDLE-J software and hence the ONLM algorithm is written as a multithreaded C program to improve performance. Additionally, the two C programs were compiled with the GCC optimizing option `-O3` turned on. The `-O3` option makes the compiler strive to improve the performance of the object code.       
 
 ### Install
-CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the computer. If ImageJ is not already installed, click [here](http://imagej.nih.gov/ij/download.html) to download the appropriate version. In the top header of this repository, click **release**. Depending on your operating system, either download the `MacOSX.zip` or `Linux.tar.gz` file from the listing. Unzip the downloaded file, and place the resultant `CANDLE-J` folder in the `plugins` folder of your local ImageJ directory. Open ImageJ (restart ImageJ if it is already open) and CANDLE-J should be available to use from the `Plugins` dropdown menu. 
+CANDLE-J is an ImageJ (64-bit) plugin and requires ImageJ to be installed on the computer. If ImageJ is not already installed, click [here](http://imagej.nih.gov/ij/download.html) to download the appropriate version. In the top header of this repository, click **release**. Depending on your operating system, either download the `MacOSX.zip`,`Windows.zip` or `Linux.tar.gz` file from the listing. Unzip the downloaded file, and place the resultant `CANDLE-J` folder in the `plugins` folder of your local ImageJ directory. Open ImageJ (restart ImageJ if it is already open) and CANDLE-J should be available to use from the `Plugins` dropdown menu. 
 
 **Important** 
 - For a Mac OS X; CANDLE-J should be used with the default `ImageJ` (64-bit) instead of the version named `ImageJ32` (32-bit). Both come bundled with the downloaded ImageJ zip file.
 
 - In a Linux machine, use the version of ImageJ that appears with the default Linux executable icon. <img src="png/LinuxLogo.png" width="24" height="24" /> Using the wrong version causes an additional statement to appear in the ImageJ log window, `Error: Could not load pre-computed correspondence table`.
 
-- There is no version for Windows as of yet. The Github repo will be updated as soon as one is available.  
 
 
 ### Usage
