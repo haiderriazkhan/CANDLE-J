@@ -1,0 +1,11 @@
+# OS generated files #
+######################
+.DS_Store
+
+# Clojure Development Folders #
+##############################
+.calva/output-window
+.clj-kondo/.cache/v1
+.lsp/.cache
+candle-j/.calva/output-window/
+

@@ -40,7 +40,7 @@ def getOptions():
     gd.showDialog()  
     
     if gd.wasCanceled():  
-        print "User canceled dialog!"  
+        print ("User canceled dialog!")
         sys.exit()  
     # Read out the options    
     beta = gd.getNextNumber()
@@ -58,7 +58,7 @@ InputImg = IJ.openImage();
 
 # Get Input Image Statistics  
 InStats = StackStatistics(InputImg)
-print "mean:", InStats.mean, "minimum:", InStats.min, "maximum:", InStats.max
+print ("mean:", InStats.mean, "minimum:", InStats.min, "maximum:", InStats.max)
 
 options = getOptions()  
 if options is not None:  
@@ -70,7 +70,7 @@ if options is not None:
 # get the image stack within the ImagePlus 
 InputStack = InputImg.getStack()
 z = InputImg.getNSlices() 
-print "number of slices:", z
+print ("number of slices:", z)
 
     
 
@@ -79,7 +79,7 @@ f3d = Filters3D()
 
 # Start of 3D Median Filter
 start_time = time.time()
-print "Preprocessing: 3D Median filter"
+print ("Preprocessing: 3D Median filter")
  
 # Retrieve filtered stack 
 medianFilteredStack = f3d.filter(InputStack, f3d.MEDIAN, 2, 2, 2) 
@@ -91,7 +91,7 @@ medianFilteredImage = ImagePlus("MedianFiltered-Image", medianFilteredStack)
 
 # End of 3D Median Filter
 elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
+print ("Elapsed time:", elapsed_time)
 
 # get image dimensions
 x = medianFilteredImage.width
@@ -101,7 +101,7 @@ y = medianFilteredImage.height
 
 # Get Image Statistics after Median 3D Filter
 medianFilterStats = StackStatistics(medianFilteredImage)
-print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max
+print ("mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maximum:", medianFilterStats.max)
 
     
 
@@ -109,7 +109,7 @@ print "mean:", medianFilterStats.mean, "minimum:", medianFilterStats.min, "maxim
 # Anscombe transform to convert Poisson noise into Gaussian noise
 
 start_time = time.time()
-print "Stabilization: Anscombe transform"
+print ("Stabilization: Anscombe transform")
 
     
 IJ.run(medianFilteredImage, "32-bit", ""); 
@@ -126,11 +126,11 @@ IJ.run(InputImg, "Multiply...", "value=2 stack");
 
 # End of Anscombe transform
 elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
+print ("Elapsed time:", elapsed_time)
 
 
 Stats = StackStatistics(medianFilteredImage)
-print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
+print ("mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max)
 
 
 
@@ -158,7 +158,7 @@ InputImg.flush()
 
 # Noise Estimation and Non-Local Means Filter
 
-print "Going Native ..."
+print ("Going Native ...")
 fimg = NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), int(patchradius), beta , int(x), int(y), int(z))
 
 
@@ -168,10 +168,10 @@ fimg = NativeCodeJNA.NativeCall(InputImgArray, medfiltArray, int(searchradius), 
 
 # Optimal Inverse Anscombe Transform
 start_time = time.time()
-print "Inverse Anscombe"
+print ("Inverse Anscombe")
 fimg = InverseAnscombe.OVST(fimg)
 elapsed_time = time.time() - start_time
-print "Elapsed time:", elapsed_time
+print ("Elapsed time:", elapsed_time)
 
 
 
@@ -182,11 +182,11 @@ for i in xrange(0, z):
     # Get the slice at index i and assign array elements corresponding to it.
     outputstack.setPixels(fimg[int(i*x*y):int((i+1)*x*y)], i+1)
 
-print 'Preparing denoised image for display '
+print ('Preparing denoised image for display ')
 outputImp = ImagePlus("Output Image", outputstack)    
-print "OutputImage Stats:"
+print ("OutputImage Stats:")
 Stats = StackStatistics(outputImp)
-print "mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max
+print ("mean:", Stats.mean, "minimum:", Stats.min, "maximum:", Stats.max)
 
 
 
