@@ -1,8 +1,8 @@
 (ns candle-j.core
-  (:import [ij IJ ImageStack ImagePlus]
-           [ij.process StackStatistics ]
-           [ij.gui GenericDialog]
-           [ij.plugin Filters3D]
+  (:import [ij IJ ImageStack ImagePlus] 
+           [ij.process StackStatistics] 
+           [ij.gui GenericDialog] 
+           [ij.plugin Filters3D] 
            [ij.io FileSaver])
   (:require [candle-j.noise-estimation :refer [zero-padding]]
             [candle-j.data-copying :refer [get-pixels-from-image]]
@@ -31,16 +31,16 @@
                     (.addNumericField gd "Search volume radius" 3 1)
                     (.showDialog gd)
                     (if (.wasCanceled gd) (IJ/log "User canceled dialog!")
-                        {:beta (.getNextNumber gd)
-                         :patch-radius (.getNextNumber gd)
+                        {:beta          (.getNextNumber gd)
+                         :patch-radius  (.getNextNumber gd)
                          :search-radius (.getNextNumber gd)})))
 
 (print (filterParams :patch-radius))
 
 (def medianFilteredImage (-> inputImage
-                              (.getStack)
-                              (Filters3D/filter (Filters3D/MEDIAN) 2 2 2)
-                              (->> (new ImagePlus "Median Filtered Image"))))
+                             (.getStack)
+                             (Filters3D/filter (Filters3D/MEDIAN) 2 2 2)
+                             (->> (new ImagePlus "Median Filtered Image"))))
 
 (new StackStatistics medianFilteredImage)
 
@@ -54,11 +54,11 @@
 (anscombe-transform medianFilteredImage)
 
 
-(def inputImageStack (.getStack inputImage))
-(def medianImageStack (.getStack medianFilteredImage))
-(.getVoxel inputImageStack 270 200 6)
+;; (def inputImageStack (.getStack inputImage))
+;; (def medianImageStack (.getStack medianFilteredImage))
+;; (.getVoxel inputImageStack 270 200 6)
 
-(new StackStatistics inputImage)
+;; (new StackStatistics inputImage)
 
 ;; [z x y]
 ;; (def inputImageArray (dtt/->tensor (get-pixels-from-image inputImageStack) {:datatype :float64}))
