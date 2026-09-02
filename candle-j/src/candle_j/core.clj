@@ -1,8 +1,8 @@
 (ns candle-j.core
-  (:import [ij IJ ImageStack ImagePlus] 
-           [ij.process StackStatistics] 
-           [ij.gui GenericDialog] 
-           [ij.plugin Filters3D] 
+  (:import [ij IJ ImageStack ImagePlus]
+           [ij.process StackStatistics]
+           [ij.gui GenericDialog]
+           [ij.plugin Filters3D]
            [ij.io FileSaver])
   (:require [candle-j.noise-estimation :refer [zero-padding]]
             [candle-j.data-copying :refer [get-pixels-from-image]]
@@ -10,8 +10,7 @@
             [tech.v3.tensor :as dtt]
             [tech.v3.datatype :as dtype]
             [tech.v3.datatype.statistics :as dts]
-            [tech.v3.datatype.functional :as dtf]
-            [clojure.core.matrix :as matrix]))
+            [tech.v3.datatype.functional :as dtf]))
 
 (def inputImage (IJ/openImage))
 (def width (.getWidth inputImage))
@@ -19,10 +18,8 @@
 (def depth (.getNSlices inputImage))
 (def dimensions (.getNDimensions inputImage))
 
-
 (print width height depth dimensions)
 (new StackStatistics inputImage)
-
 
 (def filterParams (let [gd (new GenericDialog "Options")]
                     (.addMessage gd "Filter Parameters")
@@ -53,7 +50,6 @@
 (anscombe-transform inputImage)
 (anscombe-transform medianFilteredImage)
 
-
 ;; (def inputImageStack (.getStack inputImage))
 ;; (def medianImageStack (.getStack medianFilteredImage))
 ;; (.getVoxel inputImageStack 270 200 6)
@@ -61,11 +57,10 @@
 ;; (new StackStatistics inputImage)
 
 ;; [z x y]
-;; (def inputImageArray (dtt/->tensor (get-pixels-from-image inputImageStack) {:datatype :float64}))
+;; (def inputImageArray (dtt/->tensor (get-pixels-from-image inputImageStack) {:datatype :float32}))
+
+
 ;; (dtt/mget inputImageArray 6 270 200)
 
-;; (criterium/quick-bench (zero-padding (dtt/->tensor (get-pixels-from-image inputImageStack) {:datatype :float64})))
+;; (criterium/quick-bench (zero-padding inputImageArray))
 
-;; (dtf/max image-array)
-
-;; (criterium/quick-bench (dts/min (dtt/transpose (dtt/->tensor (get-pixels-from-image-2 inputImageStack)) [2 0 1])))

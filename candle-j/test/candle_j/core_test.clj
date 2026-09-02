@@ -7,28 +7,27 @@
 (deftest lp2-test
   (testing "If x is a power of 2, the function simply returns x. 
             Otherwise, the function returns the next greatest power of 2. Undefined for zero."
-    (is (= 0 (get-padded-dimension (int 0))))
-    (is (= 1 (get-padded-dimension (int 1))))
-    (is (= 2 (get-padded-dimension (int 2))))
-    (is (= 4 (get-padded-dimension (int 3))))
-    (is (= 8 (get-padded-dimension (int 5))))
-    (is (= 8 (get-padded-dimension (int 6))))
-    (is (= 8 (get-padded-dimension (int 7))))
-    (is (= 8 (get-padded-dimension (int 8))))
-    (is (= 512 (get-padded-dimension (int 511))))
-    (is (= 512 (get-padded-dimension (int 512))))
-    (is (= 1024 (get-padded-dimension (int 513))))
-    (is (= 1024 (get-padded-dimension (int 1024))))
-    (is (= 2048 (get-padded-dimension (int 1025))))
-    (is (= 2147483648 (get-padded-dimension (int 2147483647))))))
+    (are [input expected] (= (get-padded-dimension (int input)) expected)
+      0 0
+      1 1
+      2 2
+      3 4
+      5 8
+      6 8
+      7 8
+      8 8
+      511 512
+      512 512
+      513 1024
+      1024 1024
+      1025 2048
+      2147483647 2147483648)))
 
 (deftest padded-dimensions-test
   (testing "The function returns a map of padded dimensions, 
-            given a vector of unpadded dimensions [depth, height, width]."
-    (is (= {:padded-width 16
-            :padded-height 16
-            :padded-depth 8}
-           (get-padded-dimensions [5 9 16])))))
+            given a vector of unpadded dimensions [depth, width, height]."
+    (is (= [8 16 32]
+           (get-padded-dimensions [5 9 17])))))
 
 (deftest zero-clamping-test
   (testing "The function returns a matrix with all elements >= 0, by shifting the 
@@ -42,11 +41,13 @@
 
 (deftest zero-padding-test
   (testing "The function returns a matrix with padded dimensions, 
-            given a matrix with unpadded dimensions [depth, height, width]."
-    (is (dfn/equals (dtt/->tensor (partition 2 (partition 2 (range 1 9))))
-                (zero-padding (dtt/->tensor (partition 2 (partition 2 (range 1 9)))))))
+            given a matrix with unpadded dimensions [depth, width, height]."
+    (let [input (dtt/->tensor
+                 (partition 2 (partition 2 (range 1 9)))
+                 {:datatype :float32})]
+      (is (identical? input (zero-padding input))))
     (is (dfn/equals (dtt/->tensor [[[1 2 3 0] [4 5 6 0] [7 8 9 0] [0 0 0 0]] 
                                         [[10 11 12 0] [13 14 15 0] [16 17 18 0] [0 0 0 0]]
                                         [[19 20 21 0] [22 23 24 0] [25 26 27 0] [0 0 0 0]]
-                                        [[0 0 0 0] [0 0 0 0] [0 0 0 0] [0 0 0 0]]])
-                (zero-padding (dtt/->tensor (partition 3 (partition 3 (range 1 28)))))))))
+                                        [[0 0 0 0] [0 0 0 0] [0 0 0 0] [0 0 0 0]]] {:datatype :float32})
+                (zero-padding (dtt/->tensor (partition 3 (partition 3 (range 1 28))) {:datatype :float32}))))))

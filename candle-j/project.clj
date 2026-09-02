@@ -6,8 +6,7 @@
 
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [net.imagej/ij "1.52g"]
-                 [net.mikera/vectorz-clj "0.48.0"]
                  [criterium "0.4.6"]
-                 [cnuernber/dtype-next "10.108"]]
-  :java-source-paths ["java_src"]
+                 [cnuernber/dtype-next "11.025"]]
+  :java-source-paths ["java_src"] 
   :repl-options {:init-ns candle-j.core})

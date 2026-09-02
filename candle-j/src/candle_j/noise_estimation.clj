@@ -1,11 +1,9 @@
 (ns candle-j.noise-estimation
-  (:import [bit.math BitMath])
   (:require [tech.v3.tensor :as dtt]
             [tech.v3.datatype :as dtype]
             [tech.v3.datatype.functional :as dfn]
             [tech.v3.datatype.statistics :as stats]
-            [tech.v3.datatype.convolve :as dt-conv]
-            [clj-commons.primitive-math :as pmath]))
+            [tech.v3.datatype.convolve :as dt-conv]))
 
 (def analysis-filter (dtype/->array
                       [0 0 -0.08838834764832 -0.08838834764832 0.69587998903400 -0.69587998903400 0.08838834764832 0.08838834764832 0.01122679215254 -0.01122679215254]))
@@ -26,22 +24,17 @@
   (next-pow-2 dimension))
 
 (defn get-padded-dimensions [dimensions]
-  (hash-map :padded-height (get-padded-dimension (nth dimensions 2))
-            :padded-width (get-padded-dimension (nth dimensions 1))
-            :padded-depth (get-padded-dimension (nth dimensions 0))))
+  (mapv get-padded-dimension dimensions))
 
 (defn zero-padding [image]
   (let [dimensions (dtype/shape image)
-        padded-dimensions (-> image
-                              (dtype/shape)
-                              (get-padded-dimensions))]
-    (dtype/set-value!
-      (dtt/clone (dtt/const-tensor 0
-                                  [(:padded-depth padded-dimensions)
-                                   (:padded-width padded-dimensions)
-                                   (:padded-height padded-dimensions)])
-                {:datatype :float64})
-     [(range (dimensions 0)) (range (dimensions 1)) (range (dimensions 2))] image)))
+        padded-dimensions (get-padded-dimensions dimensions)]
+    (if (= dimensions padded-dimensions)
+      image  ; Return original image if no padding needed
+      (let [new-tensor (dtt/new-tensor padded-dimensions {:datatype (dtype/elemwise-datatype image)})]
+        (dtt/tensor-copy! image (dtt/select new-tensor (range (dimensions 0)) (range (dimensions 1)) (range (dimensions 2))))
+        new-tensor))))
+
 
 (defn get-permutation-array [dimension]
   (case dimension
@@ -63,12 +56,10 @@
 
 (defn analysis-filter-along-dimension [image dimension]
   (let [rotated-and-transposed-image (-> dimension
-                                          (get-permutation-array)
-                                          (->> (dtt/transpose image))
-                                          (dtt/rotate [0 0 -5]))]
-    rotated-and-transposed-image) 
-  )
+                                         (get-permutation-array)
+                                         (->> (dtt/transpose image))
+                                         (dtt/rotate [0 0 -5]))]
+    rotated-and-transposed-image))
 
 
 (defn estimate-noise [image])
-
